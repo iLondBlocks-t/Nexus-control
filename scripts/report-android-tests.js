@@ -34,7 +34,8 @@ const succeeded = /BUILD SUCCESSFUL/.test(log);
 
 if (succeeded) {
   const counts = [...log.matchAll(/(\d+)\s+tests?,\s+(\d+)\s+passed,\s+(\d+)\s+failed/g)];
-  console.log(`client unit tests: BUILD SUCCESSFUL${counts.length ? ` (${counts[0][0]})` : ''}`);
+  console.log(`::notice::client unit tests: BUILD SUCCESSFUL${counts.length ? ` (${counts[0][0]})` : ''}`);
+  reportSuites();
   process.exit(0);
 }
 
@@ -67,8 +68,9 @@ for (const line of log.split(/\r?\n/)) {
   }
 }
 
-/* Failing assertions from the JUnit XML reports. */
-if (fs.existsSync(resultsDir)) {
+/* Failing assertions from the JUnit XML reports, plus a per-suite count. */
+function reportSuites() {
+  if (!fs.existsSync(resultsDir)) return;
   for (const file of fs.readdirSync(resultsDir).sort()) {
     if (!file.endsWith('.xml')) continue;
     const source = fs.readFileSync(path.join(resultsDir, file), 'utf8');
@@ -86,10 +88,12 @@ if (fs.existsSync(resultsDir)) {
     }
     const summary = source.match(/<testsuite[^>]*tests="(\d+)"[^>]*skipped="(\d+)"[^>]*failures="(\d+)"[^>]*errors="(\d+)"/);
     if (summary) {
-      console.log(`${file}: ${summary[1]} tests, ${summary[3]} failures, ${summary[4]} errors`);
+      console.log(`::notice file=${file}::${summary[1]} tests, ${summary[3]} failures, ${summary[4]} errors`);
     }
   }
 }
+
+reportSuites();
 
 console.log('client unit tests: FAILED');
 process.exit(1);

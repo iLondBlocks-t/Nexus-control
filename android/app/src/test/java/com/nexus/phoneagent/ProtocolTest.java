@@ -14,12 +14,12 @@ import org.junit.Test;
 public class ProtocolTest {
 
     @Test
-    public void theVersionMatchesTheServer() {
+    public void theVersionMatchesTheServer() throws Exception {
         assertEquals(1, Protocol.PROTOCOL_VERSION);
     }
 
     @Test
-    public void gibberishIsRejected() {
+    public void gibberishIsRejected() throws Exception {
         assertFalse(Protocol.parse(null).isValid());
         assertFalse(Protocol.parse("   ").isValid());
         assertFalse(Protocol.parse("not json at all").isValid());
@@ -27,7 +27,7 @@ public class ProtocolTest {
     }
 
     @Test
-    public void anotherProtocolVersionIsRejected() {
+    public void anotherProtocolVersionIsRejected() throws Exception {
         JSONObject message = new JSONObject();
         message.put("protocol_version", 2).put("type", "heartbeat");
         Protocol.Inbound inbound = Protocol.parse(message.toString());
@@ -36,7 +36,7 @@ public class ProtocolTest {
     }
 
     @Test
-    public void unknownMessageTypesAreRejected() {
+    public void unknownMessageTypesAreRejected() throws Exception {
         JSONObject message = new JSONObject();
         message.put("protocol_version", 1).put("type", "delete_everything");
         Protocol.Inbound inbound = Protocol.parse(message.toString());
@@ -45,7 +45,7 @@ public class ProtocolTest {
     }
 
     @Test
-    public void heartbeatAndStatusAreAccepted() {
+    public void heartbeatAndStatusAreAccepted() throws Exception {
         assertTrue(Protocol.parse(new JSONObject()
                 .put("protocol_version", 1).put("type", "heartbeat").toString()).isValid());
         assertTrue(Protocol.parse(new JSONObject()
@@ -53,7 +53,7 @@ public class ProtocolTest {
     }
 
     @Test
-    public void anExecuteActionNeedsIdentifiersAnActionAndAnExpiry() {
+    public void anExecuteActionNeedsIdentifiersAnActionAndAnExpiry() throws Exception {
         JSONObject complete = new JSONObject()
                 .put("protocol_version", 1)
                 .put("type", "execute_action")
@@ -85,7 +85,7 @@ public class ProtocolTest {
     }
 
     @Test
-    public void theHelloCarriesTheCredentialOnce() {
+    public void theHelloCarriesTheCredentialOnce() throws Exception {
         JSONObject hello = Protocol.deviceHello("dev_1", "token-value", null);
         assertEquals(1, hello.optInt("protocol_version", -1));
         assertEquals("device_hello", hello.optString("type"));
@@ -127,7 +127,7 @@ public class ProtocolTest {
     }
 
     @Test
-    public void approvalReasonsFallBackToASafeMessage() {
+    public void approvalReasonsFallBackToASafeMessage() throws Exception {
         JSONObject empty = new JSONObject();
         empty.put("reasons", new org.json.JSONArray());
         assertFalse(Protocol.approvalReasons(empty).isEmpty());

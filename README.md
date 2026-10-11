@@ -165,13 +165,13 @@ Stated plainly, because "it compiles" and "it works" are different claims.
   embedded, the phone's allowlist is identical to the server's, and both sides
   declare protocol version 1.
 
-**Written but not yet executed:**
+**Verified by a real compiler and a real test run (CI):**
 
-* JUnit tests for the client's pure logic — `Redactor`, `Protocol` and
-  `LocalPolicy` (`android/app/src/test/java/`). They run in CI
-  (`./gradlew :app:testDebugUnitTest`) on the first Gradle build. They have not
-  been run here: this environment has no JDK or Android SDK, and Maven Central is
-  not reachable from it, so no result is claimed for them.
+* the Android client builds. `./gradlew :app:assembleDebug` produces a debug APK
+  (~103 KB) and `./gradlew :app:testDebugUnitTest` runs **31 JUnit tests, all
+  passing**: 6 in `RedactorTest`, 11 in `ProtocolTest`, 14 in `LocalPolicyTest`.
+  Both steps are in `.github/workflows/build.yml`, and the APK is attached to
+  every run as the `nexus-debug-apk` artifact.
 
 **Not verified — you must do this on real hardware:**
 

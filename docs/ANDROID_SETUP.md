@@ -147,9 +147,15 @@ mockable `android.jar` whose `org.json` methods are stubbed out and return
 defaults, so the real library is needed for them to behave. The app itself still
 has zero runtime dependencies.
 
-These tests have not been executed in the environment this repository was
-produced in (no JDK or Android SDK was available there); they run in CI on the
-first Gradle build. See the verification section in the README.
+**Run record.** The 31 tests (6 + 11 + 14) pass in CI, together with
+`:app:assembleDebug`. The first green run was GitHub Actions run `38165662592`,
+which also produced a 103 KB APK.
+
+Reports land in `android/app/build/reports/tests/testDebugUnitTest/` and machine
+readable results in `android/app/build/test-results/testDebugUnitTest/`. When a
+run fails, `scripts/report-android-tests.js` re-publishes the compiler and
+assertion failures as CI annotations, which is how the build log was debugged
+here.
 
 ## 9. Static checks without the Android SDK
 

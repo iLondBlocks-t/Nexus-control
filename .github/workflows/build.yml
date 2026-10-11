@@ -87,9 +87,12 @@ jobs:
           set -euo pipefail
           echo "ANDROID_HOME=${ANDROID_HOME:-not-set}"
           sdkmanager --version
-          yes | sdkmanager --licenses > /dev/null
+          # "yes | sdkmanager" is avoided on purpose: yes dies of SIGPIPE and
+          # pipefail would then fail the whole step.
+          printf 'y\ny\ny\ny\ny\ny\ny\ny\n' | sdkmanager --licenses > /dev/null || true
           sdkmanager --install "platforms;android-34" "build-tools;34.0.0"
-          sdkmanager --list_installed | head -40
+          sdkmanager --list_installed > sdk-packages.txt || true
+          head -40 sdk-packages.txt || true
 
       - uses: actions/setup-node@v4
         with:

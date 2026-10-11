@@ -55,8 +55,22 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Install the Android SDK
-        uses: android-actions/setup-android@v3
+      # The GitHub-hosted Ubuntu image already ships the Android SDK; the step
+      # below makes its contents visible and installs the exact packages this
+      # build needs instead of trusting whatever the image happens to have.
+      - name: Android SDK
+        run: |
+          set -euo pipefail
+          echo "ANDROID_HOME=${ANDROID_HOME:-not-set}"
+          echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-not-set}"
+          sdkmanager --version
+          sdkmanager --list_installed | head -40
+
+      - name: Accept the Android SDK licences
+        run: yes | sdkmanager --licenses > /dev/null
+
+      - name: Install the SDK packages the build needs
+        run: sdkmanager --install "platforms;android-34" "build-tools;34.0.0"
 
       - uses: actions/setup-node@v4
         with:

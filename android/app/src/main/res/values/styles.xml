@@ -12,6 +12,15 @@
         <item name="android:statusBarColor">@color/nexus_surface</item>
     </style>
 
+    <!--
+      AAPT resolves the implicit parent of a dotted style name, so
+      NexusText.Title needs a NexusText to inherit from. These two bases are
+      intentionally empty: they exist so the dotted names below resolve.
+    -->
+    <style name="NexusText" />
+
+    <style name="NexusButton" />
+
     <style name="NexusText.Title">
         <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>

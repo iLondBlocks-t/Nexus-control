@@ -217,7 +217,7 @@ export class TelegramBot {
         'NEXUS Phone Agent',
         '',
         '/help - this message',
-        '/status - server, AI and device status',
+        '/status - device status',
         '/devices - list paired devices',
         '/pair - create a pairing code (valid once)',
         '/run <task> - send a task to your default device',

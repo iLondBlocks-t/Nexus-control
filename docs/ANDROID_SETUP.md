@@ -24,10 +24,10 @@ gradle -p android wrapper --gradle-version 8.9 --distribution-type bin
 ```
 
 That rewrites `gradlew`, `gradlew.bat` and `gradle/wrapper/gradle-wrapper.jar`
-from the official distribution. CI does exactly this (see
-`.github/workflows/build.yml`), so the build never has to trust a binary whose
-origin cannot be shown. Without the JAR, `./gradlew` exits with code 2 and prints
-these instructions instead of pretending to build.
+from the official distribution. CI simply uses the committed wrapper and prints
+its SHA-256 (see `.github/workflows/build.yml`), so anyone can compare it with
+the copy inside the official Gradle 8.9 archive. Without the JAR, `./gradlew`
+exits with code 2 and prints these instructions instead of pretending to build.
 
 ## 2. Build
 

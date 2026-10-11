@@ -11,8 +11,8 @@
 #
 #     gradle -p android wrapper --gradle-version 8.9 --distribution-type bin
 #
-# CI does exactly that, so the build never depends on a binary whose origin
-# cannot be shown. See docs/ANDROID_SETUP.md.
+# CI prints the JAR's SHA-256 so it can be compared with the copy inside the
+# official Gradle 8.9 archive. See docs/ANDROID_SETUP.md.
 #
 # ---------------------------------------------------------------------------
 

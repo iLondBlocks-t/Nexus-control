@@ -45,11 +45,15 @@ public class ProtocolTest {
     }
 
     @Test
-    public void heartbeatAndStatusAreAccepted() throws Exception {
-        assertTrue(Protocol.parse(new JSONObject()
-                .put("protocol_version", 1).put("type", "heartbeat").toString()).isValid());
+    public void aHeartbeatIsAnsweredButNeverSentToUs() throws Exception {
+        // Heartbeats travel phone -> server; the only heartbeat an inbound
+        // frame may carry is the acknowledgement of ours.
         assertTrue(Protocol.parse(new JSONObject()
                 .put("protocol_version", 1).put("type", "heartbeat_ack").toString()).isValid());
+        assertFalse(Protocol.parse(new JSONObject()
+                .put("protocol_version", 1).put("type", "heartbeat").toString()).isValid());
+        assertFalse(Protocol.parse(new JSONObject()
+                .put("protocol_version", 1).put("type", "device_status").toString()).isValid());
     }
 
     @Test

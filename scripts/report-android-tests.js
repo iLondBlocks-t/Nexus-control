@@ -40,6 +40,11 @@ if (succeeded) {
 
 const patterns = [
   /error:/,
+  /^\s+symbol:/,
+  /^\s+location:/,
+  /^\s+required:/,
+  /^\s+found:/,
+  /^\s+reason:/,
   /^e: /,
   /FAILED/,
   /Compilation failed/,
@@ -52,7 +57,7 @@ const patterns = [
 
 let emitted = 0;
 for (const line of log.split(/\r?\n/)) {
-  if (emitted >= 30) break;
+  if (emitted >= 40) break;
   if (patterns.some((pattern) => pattern.test(line))) {
     const text = sanitise(line);
     if (text) {

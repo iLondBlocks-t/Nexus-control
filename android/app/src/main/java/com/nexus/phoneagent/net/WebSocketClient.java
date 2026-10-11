@@ -96,7 +96,10 @@ public final class WebSocketClient {
 
         Socket connected = plainSocket;
         if ("wss".equals(scheme)) {
-            SSLSocketFactory factory = SSLSocketFactory.getDefault();
+            // Android declares SSLSocketFactory.getDefault() as returning
+            // javax.net.SocketFactory; the object it hands back is an SSL
+            // factory, so the cast is safe and the handshake below still runs.
+            SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
             SSLSocket ssl = (SSLSocket) factory.createSocket(plainSocket, host, port, true);
             enableSni(ssl, host);
             ssl.startHandshake();

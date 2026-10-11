@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/nexus_surface"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_settings"
+            style="@style/NexusText.Title" />
+
+        <!-- Server -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_server_title"
+                style="@style/NexusText.Section" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/settings_server_url"
+                style="@style/NexusText.Label" />
+
+            <EditText
+                android:id="@+id/settings_server"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:hint="@string/setup_server_hint"
+                android:importantForAutofill="no"
+                android:inputType="textUri"
+                android:singleLine="true"
+                style="@style/NexusInput" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/settings_ws_override"
+                style="@style/NexusText.Label" />
+
+            <EditText
+                android:id="@+id/settings_ws"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:importantForAutofill="no"
+                android:inputType="textUri"
+                android:singleLine="true"
+                style="@style/NexusInput" />
+
+            <Button
+                android:id="@+id/settings_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/settings_save"
+                style="@style/NexusButton.Primary" />
+        </LinearLayout>
+
+        <!-- Device -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_device_title"
+                style="@style/NexusText.Section" />
+
+            <TextView
+                android:id="@+id/settings_pairing_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                style="@style/NexusText.Mono" />
+
+            <Button
+                android:id="@+id/settings_disconnect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/button_disconnect"
+                style="@style/NexusButton.Secondary" />
+        </LinearLayout>
+
+        <!-- Limits -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_limits_title"
+                style="@style/NexusText.Section" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/settings_max_actions"
+                style="@style/NexusText.Label" />
+
+            <EditText
+                android:id="@+id/settings_max_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:singleLine="true"
+                style="@style/NexusInput" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/settings_max_duration"
+                style="@style/NexusText.Label" />
+
+            <EditText
+                android:id="@+id/settings_max_duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:singleLine="true"
+                style="@style/NexusInput" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/settings_history_retention"
+                style="@style/NexusText.Label" />
+
+            <EditText
+                android:id="@+id/settings_retention"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:singleLine="true"
+                style="@style/NexusInput" />
+        </LinearLayout>
+
+        <!-- Allowed actions -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_permissions_title"
+                style="@style/NexusText.Section" />
+
+            <Switch
+                android:id="@+id/settings_allow_tap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:checked="true"
+                android:text="@string/settings_allow_tap" />
+
+            <Switch
+                android:id="@+id/settings_allow_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:checked="true"
+                android:text="@string/settings_allow_scroll" />
+
+            <Switch
+                android:id="@+id/settings_allow_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:checked="true"
+                android:text="@string/settings_allow_type" />
+
+            <Switch
+                android:id="@+id/settings_allow_read"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:checked="true"
+                android:text="@string/settings_allow_read" />
+        </LinearLayout>
+
+        <!-- Privacy -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_privacy_title"
+                style="@style/NexusText.Section" />
+
+            <Switch
+                android:id="@+id/settings_share_packages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:checked="false"
+                android:text="@string/settings_share_packages" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/settings_accessibility_help"
+                style="@style/NexusText.Body" />
+
+            <Button
+                android:id="@+id/settings_accessibility"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/setup_open_accessibility"
+                style="@style/NexusButton.Secondary" />
+        </LinearLayout>
+
+        <!-- Danger zone -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_danger_title"
+                style="@style/NexusText.Section" />
+
+            <Button
+                android:id="@+id/settings_revoke"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/button_revoke_local"
+                style="@style/NexusButton.Danger" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_about_title"
+                style="@style/NexusText.Section" />
+
+            <TextView
+                android:id="@+id/settings_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                style="@style/NexusText.Body" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

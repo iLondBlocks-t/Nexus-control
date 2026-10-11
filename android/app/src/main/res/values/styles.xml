@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Framework theme only: no AppCompat, no Material Components. -->
+    <style name="Theme.Nexus" parent="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+        <item name="android:windowBackground">@color/nexus_surface</item>
+        <item name="android:colorBackground">@color/nexus_surface</item>
+        <item name="android:textColorPrimary">@color/nexus_charcoal</item>
+        <item name="android:textColorSecondary">@color/nexus_muted</item>
+        <item name="android:colorAccent">@color/nexus_purple</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/nexus_surface</item>
+    </style>
+
+    <style name="NexusText.Title">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/nexus_charcoal</item>
+    </style>
+
+    <style name="NexusText.Section">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/nexus_muted</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="NexusText.Body">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/nexus_charcoal_soft</item>
+        <item name="android:lineSpacingExtra">3dp</item>
+    </style>
+
+    <style name="NexusText.Label">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/nexus_muted</item>
+    </style>
+
+    <style name="NexusText.Mono">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/nexus_charcoal</item>
+        <item name="android:typeface">monospace</item>
+    </style>
+
+    <style name="NexusButton.Primary">
+        <item name="android:textColor">@color/nexus_white</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/bg_button_primary</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+    </style>
+
+    <style name="NexusButton.Secondary">
+        <item name="android:textColor">@color/nexus_charcoal</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:background">@drawable/bg_button_secondary</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+    </style>
+
+    <style name="NexusButton.Danger">
+        <item name="android:textColor">@color/nexus_white</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/bg_button_danger</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+    </style>
+
+    <style name="NexusCard">
+        <item name="android:background">@drawable/bg_card</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="NexusInput">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/nexus_charcoal</item>
+        <item name="android:background">@drawable/bg_input</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+</resources>

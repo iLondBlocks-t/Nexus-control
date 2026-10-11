@@ -1,0 +1,13 @@
+// Root build file for the NEXUS Phone Agent Android client.
+//
+// Versions are pinned deliberately:
+//   Android Gradle Plugin 8.5.2 requires Gradle 8.7+ and JDK 17.
+//   compileSdk 34 is the minimum compile SDK supported by AGP 8.5.
+//   minSdk 23 keeps Android 9 (API 28, target device SM-J730F) supported.
+plugins {
+    id 'com.android.application' version '8.5.2' apply false
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.buildDir
+}

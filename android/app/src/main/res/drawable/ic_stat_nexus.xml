@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Notification small icon: a flat white glyph, as Android tints these itself.
+  Vector drawables are supported from API 21; the minimum here is API 23.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M11,3h2v7h7v2h-7v7h-2v-7H4v-2h7z" />
+</vector>

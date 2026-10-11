@@ -1,0 +1,79 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  server:
+    name: Server tests and static checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: No committed credentials
+        run: npm run check:secrets
+
+      - name: Lint the server and the scripts
+        run: npm run lint
+
+      - name: Check the Android client sources
+        run: npm run android:check
+
+      - name: Validate the example configuration
+        run: npm run check:config
+
+      - name: Run the test suite
+        run: npm test
+        env:
+          NODE_ENV: test
+          STORAGE_DRIVER: memory
+          AI_PROVIDER: mock
+          OWNER_API_TOKENS: ci-owner-token
+
+  android:
+    name: Android debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # The wrapper JAR is a binary and is not committed (see android/gradlew).
+      # Install Gradle once and generate the official wrapper from it.
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Generate the Gradle wrapper
+        run: gradle -p android wrapper --gradle-version 8.9 --distribution-type bin
+
+      - name: Verify the client against the same checks as locally
+        run: npm run android:check
+
+      - name: Build the debug APK
+        run: cd android && ./gradlew :app:assembleDebug
+
+      - name: Upload the APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14

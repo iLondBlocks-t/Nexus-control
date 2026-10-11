@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Secrets and local configuration
+.env
+.env.local
+.env.*.local
+*.pem
+*.jks
+*.keystore
+android/app/signing.properties
+android/local.properties
+
+# Runtime data (task history, device records, SQLite/JSON store)
+data/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+
+# Bot session state (never commit a live session)
+.bot-session/
+bot-session/
+
+# Build output
+dist/
+build/
+out/
+coverage/
+*.log
+npm-debug.log*
+
+# Android build artefacts
+android/.gradle/
+android/build/
+android/app/build/
+android/app/release/
+android/captures/
+android/.idea/
+*.apk
+*.aab
+android/local.properties
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/
+*.swp

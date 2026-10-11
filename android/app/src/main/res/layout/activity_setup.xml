@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/nexus_surface"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_full_name"
+            style="@style/NexusText.Title" />
+
+        <TextView
+            android:id="@+id/setup_intro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/setup_intro"
+            style="@style/NexusText.Body" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setup_server_label"
+                style="@style/NexusText.Section" />
+
+            <EditText
+                android:id="@+id/setup_server"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/setup_server_hint"
+                android:importantForAutofill="no"
+                android:inputType="textUri"
+                android:imeOptions="actionNext"
+                android:singleLine="true"
+                style="@style/NexusInput" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/setup_pairing_label"
+                style="@style/NexusText.Section" />
+
+            <EditText
+                android:id="@+id/setup_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/setup_pairing_hint"
+                android:importantForAutofill="no"
+                android:inputType="textCapCharacters"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                style="@style/NexusInput" />
+
+            <Button
+                android:id="@+id/setup_connect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/setup_button_connect"
+                style="@style/NexusButton.Primary" />
+
+            <Button
+                android:id="@+id/setup_skip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/setup_button_skip"
+                style="@style/NexusButton.Secondary" />
+
+            <TextView
+                android:id="@+id/setup_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                style="@style/NexusText.Body" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setup_permissions_title"
+                style="@style/NexusText.Section" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/setup_permissions_body"
+                style="@style/NexusText.Body" />
+
+            <Button
+                android:id="@+id/setup_accessibility"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/setup_open_accessibility"
+                style="@style/NexusButton.Secondary" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

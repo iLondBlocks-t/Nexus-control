@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+# NEXUS Gradle wrapper bootstrap.
+#
+# The wrapper JAR is a binary and is deliberately not committed here. Run
+#
+#     gradle -p android wrapper --gradle-version 8.9 --distribution-type bin
+#
+# once on a machine that has Gradle installed (or let CI do it, see
+# .github/workflows/build.yml). That command generates the official
+# gradlew, gradlew.bat and gradle/wrapper/gradle-wrapper.jar, after which
+# ./gradlew works exactly as it does in any other Android project.
+#
+# Until then this script refuses to run instead of pretending to build.
+#
+# ---------------------------------------------------------------------------
+
+set -e
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+JAR="$DIR/gradle/wrapper/gradle-wrapper.jar"
+
+if [ ! -f "$JAR" ]; then
+  echo "gradle-wrapper.jar is missing." >&2
+  echo "" >&2
+  echo "Generate it once with:" >&2
+  echo "    gradle -p android wrapper --gradle-version 8.9 --distribution-type bin" >&2
+  echo "" >&2
+  echo "See docs/ANDROID_SETUP.md for the full build instructions." >&2
+  exit 2
+fi
+
+if [ -n "$JAVA_HOME" ] && [ -x "$JAVA_HOME/bin/java" ]; then
+  JAVACMD="$JAVA_HOME/bin/java"
+else
+  JAVACMD="java"
+fi
+
+if ! command -v "$JAVACMD" >/dev/null 2>&1; then
+  echo "No Java runtime found. Install a JDK 17 and try again." >&2
+  exit 2
+fi
+
+exec "$JAVACMD" -classpath "$JAR" org.gradle.wrapper.GradleWrapperMain "$@"

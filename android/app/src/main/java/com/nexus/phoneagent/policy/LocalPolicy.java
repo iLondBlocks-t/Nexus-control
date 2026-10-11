@@ -1,6 +1,5 @@
 package com.nexus.phoneagent.policy;
 
-import com.nexus.phoneagent.core.Config;
 import com.nexus.phoneagent.util.Redactor;
 
 import org.json.JSONObject;
@@ -86,10 +85,10 @@ public final class LocalPolicy {
      * Validate an inbound action.
      *
      * @param action the action payload
-     * @param config owner settings (per-action switches and budgets)
+     * @param settings the owner's per-capability switches
      * @param sequence position of the action inside the task
      */
-    public static Decision validate(JSONObject action, Config config, int sequence) {
+    public static Decision validate(JSONObject action, PolicySettings settings, int sequence) {
         if (action == null) {
             return Decision.deny("INVALID_REQUEST", "The action was empty.");
         }
@@ -100,7 +99,7 @@ public final class LocalPolicy {
         if (sequence > MAX_ACTIONS_HARD_LIMIT) {
             return Decision.deny("ACTION_NOT_ALLOWED", "The action budget was exceeded.");
         }
-        if (!config.isActionAllowed(type)) {
+        if (!settings.isAllowed(type)) {
             return Decision.deny("ACTION_NOT_ALLOWED", "This action is switched off in Settings.");
         }
 

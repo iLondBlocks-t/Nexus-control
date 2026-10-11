@@ -3,6 +3,8 @@ package com.nexus.phoneagent.core;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.nexus.phoneagent.policy.PolicySettings;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -144,6 +146,15 @@ public final class Config {
                 return;
         }
         prefs.edit().putBoolean(key, allowed).apply();
+    }
+
+    /** Snapshot for the pure validation rules in {@code LocalPolicy}. */
+    public PolicySettings toPolicySettings() {
+        return new PolicySettings(
+                isActionAllowed("tap_element"),
+                isActionAllowed("scroll"),
+                isActionAllowed("type_text"),
+                isActionAllowed("read_visible_ui"));
     }
 
     public boolean isSharePackagesEnabled() {

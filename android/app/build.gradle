@@ -63,4 +63,7 @@ android {
 dependencies {
     // No runtime dependencies: Android framework APIs only.
     testImplementation 'junit:junit:4.13.2'
+    // The unit tests run against a mockable android.jar whose org.json methods
+    // are stubbed out, so a real org.json is needed for them to behave.
+    testImplementation 'org.json:json:20231013'
 }

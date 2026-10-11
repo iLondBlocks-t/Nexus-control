@@ -123,7 +123,35 @@ If a step does not behave like that, see [TROUBLESHOOTING.md](./TROUBLESHOOTING.
 state on the phone. It does not revoke the device on the server — do that with
 `POST /api/v1/devices/:id/revoke` or the bot's `/revoke`.
 
-## 8. Static checks without the Android SDK
+## 8. Unit tests
+
+The pure parts of the client — the redactor, the protocol and the on-device
+policy rules — have JUnit tests under `android/app/src/test/java/`:
+
+```bash
+cd android && ./gradlew :app:testDebugUnitTest
+```
+
+They cover:
+
+* `RedactorTest` — credentials, emails, long digit runs and secret field labels
+  are recognised; ordinary text is left alone.
+* `ProtocolTest` — malformed frames, wrong protocol versions and unknown types are
+  rejected; every outbound message carries the fields the server's schema requires.
+* `LocalPolicyTest` — the phone refuses unknown action types, bad package names,
+  unknown settings screens, password/card fields, injected instructions,
+  credential-shaped text, switched-off capabilities and over-budget sequences.
+
+`org.json:json:20231013` is a **test-only** dependency: unit tests run against a
+mockable `android.jar` whose `org.json` methods are stubbed out and return
+defaults, so the real library is needed for them to behave. The app itself still
+has zero runtime dependencies.
+
+These tests have not been executed in the environment this repository was
+produced in (no JDK or Android SDK was available there); they run in CI on the
+first Gradle build. See the verification section in the README.
+
+## 9. Static checks without the Android SDK
 
 ```bash
 npm run android:check
@@ -142,7 +170,7 @@ This verifies, from the sources alone:
 
 It is not a compiler. It cannot prove the app builds — only Gradle can.
 
-## 9. Battery and data
+## 10. Battery and data
 
 * One outbound TLS connection, kept alive with a heartbeat every 20 s.
 * Exponential backoff when the server is unreachable, capped at 60 s.

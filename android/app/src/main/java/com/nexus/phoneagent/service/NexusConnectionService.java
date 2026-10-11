@@ -734,7 +734,7 @@ public class NexusConnectionService extends Service implements WebSocketClient.L
             return;
         }
 
-        LocalPolicy.Decision decision = LocalPolicy.validate(action, config, sequence);
+        LocalPolicy.Decision decision = LocalPolicy.validate(action, config.toPolicySettings(), sequence);
         if (!decision.allowed) {
             finishAction(context, record, sequence, false, decision.errorCode, decision.message, 0L, null);
             return;

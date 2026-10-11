@@ -22,6 +22,7 @@ const ROOT = path.resolve(import.meta.dirname, '..');
 const APP = path.join(ROOT, 'android', 'app', 'src', 'main');
 const RES = path.join(APP, 'res');
 const JAVA = path.join(APP, 'java');
+const TEST_JAVA = path.join(APP.replace(`${path.sep}main`, `${path.sep}test`), 'java');
 
 const errors = [];
 const notes = [];
@@ -96,7 +97,8 @@ function collectResources() {
 }
 
 function collectJavaFiles() {
-  return walk(JAVA, ['.java']);
+  // Main and unit-test sources: the same rules apply to both.
+  return [...walk(JAVA, ['.java']), ...walk(TEST_JAVA, ['.java'])];
 }
 
 const resources = collectResources();
@@ -128,7 +130,7 @@ for (const file of javaFiles) {
 /* 2. Every findViewById / R.id reference exists in a layout            */
 /* ------------------------------------------------------------------ */
 const declaredIds = resources.get('id') ?? new Set();
-for (const file of javaFiles) {
+for (const file of javaFiles.filter((file) => file.startsWith(JAVA))) {
   const source = fs.readFileSync(file, 'utf8');
   const relative = path.relative(ROOT, file);
   for (const match of source.matchAll(/\bR\.id\.([A-Za-z_][A-Za-z0-9_]*)/g)) {
@@ -161,7 +163,9 @@ if (!fs.existsSync(manifestPath)) {
       }
     }
     const javaPackages = new Set(
-      javaFiles.map((file) => path.relative(JAVA, file).split(path.sep).slice(0, -1).join('.')),
+      collectJavaFiles()
+        .filter((file) => file.startsWith(JAVA))
+        .map((file) => path.relative(JAVA, file).split(path.sep).slice(0, -1).join('.')),
     );
     for (const javaPackage of javaPackages) {
       if (!javaPackage.startsWith(packageName)) {
@@ -297,5 +301,9 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log(`android:check ok (${javaFiles.length} sources, ${declaredIds.size} layout ids)`);
+console.log(
+  `android:check ok (${javaFiles.filter((file) => file.startsWith(JAVA)).length} sources, `
+    + `${javaFiles.length - javaFiles.filter((file) => file.startsWith(JAVA)).length} tests, `
+    + `${declaredIds.size} layout ids)`,
+);
 for (const note of notes) console.log(`  · ${note}`);

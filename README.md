@@ -165,6 +165,14 @@ Stated plainly, because "it compiles" and "it works" are different claims.
   embedded, the phone's allowlist is identical to the server's, and both sides
   declare protocol version 1.
 
+**Written but not yet executed:**
+
+* JUnit tests for the client's pure logic — `Redactor`, `Protocol` and
+  `LocalPolicy` (`android/app/src/test/java/`). They run in CI
+  (`./gradlew :app:testDebugUnitTest`) on the first Gradle build. They have not
+  been run here: this environment has no JDK or Android SDK, and Maven Central is
+  not reachable from it, so no result is claimed for them.
+
 **Not verified — you must do this on real hardware:**
 
 * that the APK compiles and installs (no Android SDK in this environment; the

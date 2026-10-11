@@ -87,6 +87,9 @@ jobs:
       - name: Check the Android client sources
         run: npm run android:check
 
+      - name: Run the client unit tests
+        run: cd android && ./gradlew --no-daemon :app:testDebugUnitTest
+
       - name: Build the debug APK
         run: cd android && ./gradlew --no-daemon :app:assembleDebug
 

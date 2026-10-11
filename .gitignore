@@ -13,8 +13,10 @@ node_modules/
 android/app/signing.properties
 android/local.properties
 
-# Runtime data (task history, device records, SQLite/JSON store)
-data/
+# Runtime data (task history, device records, SQLite/JSON store).
+# Anchored: a bare "data/" would also swallow android/.../phoneagent/data/,
+# which is the client's Java package for the local task history.
+/data/
 *.db
 *.db-shm
 *.db-wal

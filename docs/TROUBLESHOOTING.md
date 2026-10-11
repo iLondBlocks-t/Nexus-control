@@ -140,6 +140,32 @@ Common ones:
 * SQLite driver without the optional dependency installed → the driver reports it
   at startup; use `json` instead.
 
+## The build fails
+
+Two failures cost real CI minutes while this client was being written, so both
+are worth recording.
+
+**`error: resource style/NexusText not found`** — AAPT treats a dotted style
+name as an implicit inheritance: `NexusText.Title` inherits from `NexusText`.
+If the base style does not exist, the resource merge fails even though the
+layout only ever asks for `NexusText.Title`. The bases (`NexusText`,
+`NexusButton`) are therefore declared, empty, in
+`app/src/main/res/values/styles.xml`. The same rule is why `Theme.Nexus`
+works: `Theme` exists in the framework.
+
+**`package com.nexus.phoneagent.data does not exist`** — a source file was
+missing from the checkout. `npm run android:check` now catches this without a
+compiler: it resolves every `import com.nexus.phoneagent.…` against the source
+tree and names the file that should be there.
+
+If Gradle itself misbehaves:
+
+* `./gradlew --stop` kills a stuck daemon; `./gradlew --status` lists them.
+* `./gradlew :app:assembleDebug --stacktrace --info` shows exactly which task
+  failed. AAPT errors are printed just above `Execution failed`.
+* `error: resource android:style/Theme.DeviceDefault not found` means the
+  compile SDK is too low; this project needs `platforms;android-34`.
+
 ## Logs
 
 Set `LOG_FORMAT=pretty` locally. Useful events:

@@ -141,6 +141,33 @@ for (const file of javaFiles.filter((file) => file.startsWith(JAVA))) {
 }
 
 /* ------------------------------------------------------------------ */
+/* 3. Every import of our own code resolves to a source file            */
+/*    A missing source file is otherwise invisible until javac runs,    */
+/*    which on a phone-less CI machine is five minutes too late.         */
+/* ------------------------------------------------------------------ */
+const declaredClasses = new Set(
+  javaFiles.map((file) =>
+    path
+      .relative(APP, file)
+      .replace(/\.java$/, '')
+      .replace(/^src[\\/]/, '')
+      .split(/[\\/]/)
+      .slice(1)
+      .join('.')),
+);
+for (const file of javaFiles) {
+  const source = fs.readFileSync(file, 'utf8');
+  const relative = path.relative(ROOT, file);
+  for (const match of source.matchAll(/^import\s+(?:static\s+)?(com\.nexus\.phoneagent\.[\w.]+)\s*;/gm)) {
+    const imported = match[1];
+    if (imported === 'com.nexus.phoneagent.R' || imported.startsWith('com.nexus.phoneagent.R.')) continue;
+    if (!declaredClasses.has(imported)) {
+      errors.push(`${relative}: imports ${imported}, which has no source file`);
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* 3. The manifest only names classes that exist                        */
 /* ------------------------------------------------------------------ */
 const manifestPath = path.join(APP, 'AndroidManifest.xml');

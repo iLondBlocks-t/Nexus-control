@@ -118,8 +118,19 @@ jobs:
       - name: Check the Android client sources
         run: npm run android:check
 
+      # The output is kept and re-published as job annotations below, so a
+      # failure can be read from the Checks API without downloading raw logs.
       - name: Run the client unit tests
-        run: cd android && ./gradlew --no-daemon :app:testDebugUnitTest
+        id: client-tests
+        continue-on-error: true
+        run: |
+          cd android
+          set -o pipefail
+          ./gradlew --no-daemon :app:testDebugUnitTest 2>&1 | tee "$RUNNER_TEMP/client-tests.log"
+          exit "${PIPESTATUS[0]}"
+
+      - name: Report the client test result
+        run: node scripts/report-android-tests.js "$RUNNER_TEMP/client-tests.log"
 
       - name: Build the debug APK
         run: cd android && ./gradlew --no-daemon :app:assembleDebug

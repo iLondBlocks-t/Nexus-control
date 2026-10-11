@@ -55,6 +55,81 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      # The runner image may or may not ship the Android SDK, so install the
+      # official command line tools when sdkmanager is not already available
+      # (both URLs below are Google's own, long lived "_latest" archives).
+      - name: Install the Android SDK command line tools
+        run: |
+          set -euo pipefail
+          if command -v sdkmanager > /dev/null 2>&1; then
+            echo "sdkmanager is already available at $(command -v sdkmanager)"
+            exit 0
+          fi
+          SDK="$HOME/android-sdk"
+          mkdir -p "$SDK/cmdline-tools"
+          for version in 11076708 13114758; do
+            url="https://dl.google.com/android/repository/commandlinetools-linux-${version}_latest.zip"
+            echo "trying ${url}"
+            if curl -fsSL -o /tmp/cmdline-tools.zip "$url"; then
+              echo "downloaded ${url}"
+              break
+            fi
+          done
+          test -s /tmp/cmdline-tools.zip
+          unzip -q -o /tmp/cmdline-tools.zip -d "$SDK/cmdline-tools"
+          mv "$SDK/cmdline-tools/cmdline-tools" "$SDK/cmdline-tools/latest"
+          echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK" >> "$GITHUB_ENV"
+          echo "$SDK/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+
+      - name: Android SDK packages
+        run: |
+          set -euo pipefail
+          echo "ANDROID_HOME=${ANDROID_HOME:-not-set}"
+          sdkmanager --version
+          yes | sdkmanager --licenses > /dev/null
+          sdkmanager --install "platforms;android-34" "build-tools;34.0.0"
+          sdkmanager --list_installed | head -40
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: No committed credentials
+        run: npm run check:secrets
+
+      - name: Lint the server and the scripts
+        run: npm run lint
+
+      - name: Check the Android client sources
+        run: npm run android:check
+
+      - name: Validate the example configuration
+        run: npm run check:config
+
+      - name: Run the test suite
+        run: npm test
+        env:
+          NODE_ENV: test
+          STORAGE_DRIVER: memory
+          AI_PROVIDER: mock
+          OWNER_API_TOKENS: ci-owner-token
+
+  android:
+    name: Android debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
       # The GitHub-hosted Ubuntu image already ships the Android SDK; the step
       # below makes its contents visible and installs the exact packages this
       # build needs instead of trusting whatever the image happens to have.

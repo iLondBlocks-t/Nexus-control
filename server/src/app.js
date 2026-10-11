@@ -5,6 +5,7 @@ import { optionalOwnerAuth, createPairRouter } from './routes/pair.js';
 import { createDevicesRouter } from './routes/devices.js';
 import { createTasksRouter } from './routes/tasks.js';
 import { createHealthRouter } from './routes/health.js';
+import { createConsoleRouter } from './routes/console.js';
 
 const API_JSON_LIMIT = '128kb';
 
@@ -29,6 +30,9 @@ export function createApp(context) {
   app.use(express.urlencoded({ extended: false, limit: '16kb' }));
 
   app.use(createHealthRouter({ config, store, aiProvider, gateway, storage, startedAt, version }));
+
+  // Owner control panel: static files, no credentials of their own.
+  app.use('/console', createConsoleRouter());
 
   // Pairing: "create" requires the owner token, "complete" does not.
   app.use('/api/v1/pair', optionalOwnerAuth(config, { logger }));

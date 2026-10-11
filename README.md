@@ -37,7 +37,10 @@ npm run ai:doctor       # is the AI provider configured?
 npm start
 ```
 
-Open `https://your-server/healthz`. Then:
+Open `https://your-server/healthz` — or the control panel at
+`https://your-server/console/`, which does the same steps with buttons: pair a
+phone, write an instruction, watch the actions run and approve the sensitive
+ones. Then, from a terminal if you prefer:
 
 ```bash
 # 1. create a pairing code (owner token required)
@@ -96,13 +99,15 @@ server/src/            Node.js server (ESM, zero framework magic)
   tasks/               Service, executor, state machine
   websocket/           Gateway + protocol v1 schemas
   bot/                 Telegram long-polling adapter
+  public/              console.html — the owner's control panel (no build step)
   storage/             memory | json | sqlite
 android/               Native Java client (AGP 8.5.2, minSdk 23, targetSdk 34)
   app/src/main/java/com/nexus/phoneagent/
     core/ net/ protocol/ policy/ executor/ service/ data/ ui/ util/
 scripts/               lint, check-secrets, check-config, ai-doctor, check-android
 docs/                  ARCHITECTURE · API · PROTOCOL · DEPLOYMENT
-                       ANDROID_SETUP · SECURITY_MODEL · TROUBLESHOOTING
+                       ANDROID_SETUP · BOT_SETUP · SECURITY_MODEL
+                       TROUBLESHOOTING
 ```
 
 ---

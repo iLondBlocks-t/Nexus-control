@@ -78,6 +78,24 @@ hard ceilings, missing values). `npm run ai:doctor` reports `provider`, whether 
 key is present and whether the provider is configured; it does **not** call the
 provider.
 
+### OpenRouter and other OpenAI-compatible providers
+
+OpenRouter speaks the OpenAI HTTP API, so it needs no code — only
+configuration. Pick the model on OpenRouter's site and copy its identifier
+exactly:
+
+```dotenv
+AI_PROVIDER=openai_compatible
+OPENAI_BASE_URL=https://openrouter.ai/api/v1
+OPENAI_API_KEY=<your OpenRouter key>
+OPENAI_MODEL=<the exact model id from openrouter.ai/models>
+```
+
+Keep the key on the server. It is never sent to the phone, it is never embedded
+in the APK, and `npm run check:config` prints the settings with the key hidden.
+If a key ever lands in a chat, a log or a commit, treat it as compromised and
+rotate it at the provider before doing anything else.
+
 ### Model names
 
 Do not guess a model. Model identifiers change and depend on your account.
@@ -163,6 +181,31 @@ ReadWritePaths=/opt/nexus/data
 [Install]
 WantedBy=multi-user.target
 ```
+
+## 4b. The control panel
+
+The server ships a web panel at `/console/` — three static files
+(`server/public/`), no build step and nothing loaded from a CDN:
+
+```
+http://127.0.0.1:3000/console/
+```
+
+Type the owner token from `.env` into the page; it is kept in that tab's session
+storage and sent back to the same origin as a bearer token. The panel then
+shows:
+
+* the device list with online state, plus a **new pairing code** button;
+* a task box — write an instruction, pick a device, run it;
+* every task with its actions as they execute, refreshed while a task is
+  running;
+* **Approve / Deny / Cancel** buttons for a task that stopped for approval.
+
+The panel is served without authentication on purpose: it holds no credentials
+and cannot reach the data without the token. It is a thin client over
+`/api/v1/*`, so it cannot widen any rule — the allowlist, the action budget and
+the approval gate all live on the server. `curl` does the same thing if you
+prefer a terminal.
 
 ## 5. Telegram bot
 

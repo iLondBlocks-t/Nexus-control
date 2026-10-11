@@ -12,26 +12,26 @@ import org.junit.Test;
 public class RedactorTest {
 
     @Test
-    public void ordinaryTextIsLeftAlone() {
+    public void ordinaryTextIsLeftAlone() throws Exception {
         assertEquals("Open YouTube", Redactor.redact("Open YouTube"));
         assertEquals("", Redactor.redact(null));
         assertEquals("", Redactor.redact("   "));
     }
 
     @Test
-    public void passwordTextIsHidden() {
+    public void passwordTextIsHidden() throws Exception {
         assertEquals(Redactor.PLACEHOLDER, Redactor.redact("my password is hunter2"));
         assertEquals(Redactor.PLACEHOLDER, Redactor.redact("PIN"));
     }
 
     @Test
-    public void emailsAndLongDigitRunsAreMasked() {
+    public void emailsAndLongDigitRunsAreMasked() throws Exception {
         assertTrue(Redactor.redact("write to a.person@example.com now").contains(Redactor.PLACEHOLDER));
         assertTrue(Redactor.redact("code 834615").contains(Redactor.PLACEHOLDER));
     }
 
     @Test
-    public void credentialsAreRecognised() {
+    public void credentialsAreRecognised() throws Exception {
         assertTrue(Redactor.looksSensitive("123456"));
         assertTrue(Redactor.looksSensitive("password123"));
         assertTrue(Redactor.looksSensitive("card number 4111 1111 1111 1111"));
@@ -41,7 +41,7 @@ public class RedactorTest {
     }
 
     @Test
-    public void secretFieldLabelsAreRecognised() {
+    public void secretFieldLabelsAreRecognised() throws Exception {
         assertTrue(Redactor.isSensitiveFieldLabel("Password"));
         assertTrue(Redactor.isSensitiveFieldLabel("enter your pin"));
         assertTrue(Redactor.isSensitiveFieldLabel("CVV"));
@@ -50,7 +50,7 @@ public class RedactorTest {
     }
 
     @Test
-    public void truncationKeepsMessagesShort() {
+    public void truncationKeepsMessagesShort() throws Exception {
         assertEquals("abc", Redactor.truncate("abc", 10));
         assertEquals("abc" + '…', Redactor.truncate("abcdef", 3));
         assertEquals("", Redactor.truncate(null, 10));

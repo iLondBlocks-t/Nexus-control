@@ -168,8 +168,8 @@ Stated plainly, because "it compiles" and "it works" are different claims.
 **Not verified — you must do this on real hardware:**
 
 * that the APK compiles and installs (no Android SDK in this environment; the
-  Gradle wrapper JAR is generated on first build, see
-  [docs/ANDROID_SETUP.md](docs/ANDROID_SETUP.md));
+  Gradle wrapper JAR is committed, and CI regenerates it from the official
+  Gradle 8.9 distribution — see [docs/ANDROID_SETUP.md](docs/ANDROID_SETUP.md));
 * that the accessibility service behaves on your device and ROM;
 * real UI interactions against real apps;
 * battery behaviour over hours;

@@ -2,16 +2,17 @@
 #
 # NEXUS Gradle wrapper bootstrap.
 #
-# The wrapper JAR is a binary and is deliberately not committed here. Run
+# A Gradle wrapper JAR is committed at gradle/wrapper/gradle-wrapper.jar, so
+# ./gradlew works out of the box: it downloads the Gradle distribution named in
+# gradle/wrapper/gradle-wrapper.properties (8.9) and runs the build with it.
+#
+# If your policy forbids committed binaries, delete the JAR and regenerate it
+# from an official Gradle installation instead:
 #
 #     gradle -p android wrapper --gradle-version 8.9 --distribution-type bin
 #
-# once on a machine that has Gradle installed (or let CI do it, see
-# .github/workflows/build.yml). That command generates the official
-# gradlew, gradlew.bat and gradle/wrapper/gradle-wrapper.jar, after which
-# ./gradlew works exactly as it does in any other Android project.
-#
-# Until then this script refuses to run instead of pretending to build.
+# CI does exactly that, so the build never depends on a binary whose origin
+# cannot be shown. See docs/ANDROID_SETUP.md.
 #
 # ---------------------------------------------------------------------------
 
@@ -41,4 +42,5 @@ if ! command -v "$JAVACMD" >/dev/null 2>&1; then
   exit 2
 fi
 
-exec "$JAVACMD" -classpath "$JAR" org.gradle.wrapper.GradleWrapperMain "$@"
+exec "$JAVACMD" -classpath "$JAR" -Dorg.gradle.appname=gradlew \
+  org.gradle.wrapper.GradleWrapperMain "$@"

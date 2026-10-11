@@ -55,20 +55,40 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      # The wrapper JAR is a binary and is not committed (see android/gradlew).
-      # Install Gradle once and generate the official wrapper from it.
+      - name: Install the Android SDK
+        uses: android-actions/setup-android@v3
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # A wrapper JAR is committed, but CI regenerates it from the official
+      # Gradle 8.9 distribution so the chain of provenance is verifiable:
+      # official distribution -> official wrapper -> APK. It is generated in an
+      # empty directory so the Android project is never configured twice.
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
 
       - name: Generate the Gradle wrapper
-        run: gradle -p android wrapper --gradle-version 8.9 --distribution-type bin
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp -d)"
+          ( cd "$tmp" && gradle --no-daemon wrapper --gradle-version 8.9 --distribution-type bin )
+          cp "$tmp/gradlew" "$tmp/gradlew.bat" android/
+          mkdir -p android/gradle/wrapper
+          cp "$tmp/gradle/wrapper/gradle-wrapper.jar" android/gradle/wrapper/
+          chmod +x android/gradlew
 
-      - name: Verify the client against the same checks as locally
+      - name: Check the Android client sources
         run: npm run android:check
 
       - name: Build the debug APK
-        run: cd android && ./gradlew :app:assembleDebug
+        run: cd android && ./gradlew --no-daemon :app:assembleDebug
 
       - name: Upload the APK
         uses: actions/upload-artifact@v4

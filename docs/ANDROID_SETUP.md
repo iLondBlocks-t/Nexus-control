@@ -12,17 +12,22 @@ no native libraries.
 | Gradle | 8.9 (AGP 8.5.2 requires 8.7+) |
 | Android SDK | compileSdk 34, build-tools 34.x |
 
-The wrapper JAR is a binary and is **not** committed in this repository. Generate
-it once on a machine that has Gradle installed:
+A Gradle wrapper JAR is committed at `android/gradle/wrapper/gradle-wrapper.jar`,
+so `./gradlew` works out of the box: it downloads Gradle 8.9 (named in
+`gradle-wrapper.properties`) and runs the build with it.
+
+If your policy forbids committed binaries, delete the JAR and regenerate it from
+an official Gradle installation:
 
 ```bash
 gradle -p android wrapper --gradle-version 8.9 --distribution-type bin
 ```
 
-That writes the official `gradlew`, `gradlew.bat` and
-`gradle/wrapper/gradle-wrapper.jar`. Until then `./gradlew` exits with code 2 and
-prints these instructions instead of pretending to build. CI does the same step
-(see `.github/workflows/build.yml`).
+That rewrites `gradlew`, `gradlew.bat` and `gradle/wrapper/gradle-wrapper.jar`
+from the official distribution. CI does exactly this (see
+`.github/workflows/build.yml`), so the build never has to trust a binary whose
+origin cannot be shown. Without the JAR, `./gradlew` exits with code 2 and prints
+these instructions instead of pretending to build.
 
 ## 2. Build
 

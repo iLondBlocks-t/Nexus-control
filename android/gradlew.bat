@@ -1,13 +1,15 @@
 @rem
 @rem NEXUS Gradle wrapper bootstrap (Windows).
 @rem
-@rem The wrapper JAR is a binary and is deliberately not committed here.
-@rem Generate it once with:
+@rem A Gradle wrapper JAR is committed at gradle\wrapper\gradle-wrapper.jar, so
+@rem gradlew.bat works out of the box: it downloads the Gradle distribution
+@rem named in gradle-wrapper.properties (8.9) and runs the build with it.
+@rem
+@rem To regenerate it from an official Gradle installation instead:
 @rem
 @rem     gradle -p android wrapper --gradle-version 8.9 --distribution-type bin
 @rem
-@rem which writes the official gradlew, gradlew.bat and
-@rem gradle/wrapper/gradle-wrapper.jar. See docs/ANDROID_SETUP.md.
+@rem See docs/ANDROID_SETUP.md.
 @rem
 @rem ------------------------------------------------------------------------
 
@@ -33,5 +35,5 @@ if defined JAVA_HOME (
   set JAVACMD=java
 )
 
-"%JAVACMD%" -classpath "%JAR%" org.gradle.wrapper.GradleWrapperMain %*
+"%JAVACMD%" -classpath "%JAR%" -Dorg.gradle.appname=gradlew org.gradle.wrapper.GradleWrapperMain %*
 exit /b %ERRORLEVEL%

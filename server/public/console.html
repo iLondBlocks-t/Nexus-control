@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>NEXUS control panel</title>
+    <link rel="stylesheet" href="console.css" />
+  </head>
+  <body>
+    <header class="bar">
+      <h1>NEXUS <span>phone agent</span></h1>
+      <div id="server" class="pill" data-state="loading">connecting…</div>
+    </header>
+
+    <section class="card" id="auth-card">
+      <h2>Owner token</h2>
+      <p class="hint">
+        The token from <code>.env</code> (<code>OWNER_API_TOKENS</code>). It is kept in this tab's
+        session storage only — nothing is written to disk, and the panel never sends it anywhere but
+        to this same origin.
+      </p>
+      <form id="auth-form" class="row">
+        <input
+          id="token"
+          type="password"
+          placeholder="owner api token"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button type="submit" class="primary">Connect</button>
+        <button type="button" id="forget" class="ghost">Forget</button>
+      </form>
+      <p id="auth-state" class="state"></p>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Device</h2>
+        <div id="devices" class="list"><p class="hint">Not loaded yet.</p></div>
+        <button type="button" id="refresh-devices" class="ghost">Refresh</button>
+        <button type="button" id="pair" class="ghost">New pairing code</button>
+        <p id="pair-state" class="state"></p>
+      </div>
+
+      <div class="card">
+        <h2>New task</h2>
+        <form id="task-form">
+          <label for="device">Device</label>
+          <select id="device" name="device"></select>
+          <label for="instruction">Instruction</label>
+          <textarea
+            id="instruction"
+            rows="3"
+            placeholder="Open YouTube and search for lo-fi hip hop"
+            maxlength="1000"
+            required
+          ></textarea>
+          <button type="submit" class="primary">Run on the phone</button>
+        </form>
+        <p id="task-state" class="state"></p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Tasks <span id="tasks-count" class="pill" data-state="idle">0</span></h2>
+      <p class="hint">
+        The list refreshes by itself while a task is running. An action the policy engine marked
+        sensitive stops here until you approve or deny it.
+      </p>
+      <div id="tasks" class="list"><p class="hint">No tasks yet.</p></div>
+    </section>
+
+    <footer>
+      <p>
+        NEXUS control panel — a thin client over <code>/api/v1/*</code>. Every rule the API enforces
+        (allowlist, action budget, approval) applies here too; the panel cannot widen them.
+      </p>
+    </footer>
+
+    <script src="console.js"></script>
+  </body>
+</html>

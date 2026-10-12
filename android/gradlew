@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# NEXUS Gradle wrapper bootstrap.
+#
+# A Gradle wrapper JAR is committed at gradle/wrapper/gradle-wrapper.jar, so
+# ./gradlew works out of the box: it downloads the Gradle distribution named in
+# gradle/wrapper/gradle-wrapper.properties (8.9) and runs the build with it.
+#
+# If your policy forbids committed binaries, delete the JAR and regenerate it
+# from an official Gradle installation instead:
+#
+#     gradle -p android wrapper --gradle-version 8.9 --distribution-type bin
+#
+# CI prints the JAR's SHA-256 so it can be compared with the copy inside the
+# official Gradle 8.9 archive. See docs/ANDROID_SETUP.md.
+#
+# ---------------------------------------------------------------------------
+
+set -e
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+JAR="$DIR/gradle/wrapper/gradle-wrapper.jar"
+
+if [ ! -f "$JAR" ]; then
+  echo "gradle-wrapper.jar is missing." >&2
+  echo "" >&2
+  echo "Generate it once with:" >&2
+  echo "    gradle -p android wrapper --gradle-version 8.9 --distribution-type bin" >&2
+  echo "" >&2
+  echo "See docs/ANDROID_SETUP.md for the full build instructions." >&2
+  exit 2
+fi
+
+if [ -n "$JAVA_HOME" ] && [ -x "$JAVA_HOME/bin/java" ]; then
+  JAVACMD="$JAVA_HOME/bin/java"
+else
+  JAVACMD="java"
+fi
+
+if ! command -v "$JAVACMD" >/dev/null 2>&1; then
+  echo "No Java runtime found. Install a JDK 17 and try again." >&2
+  exit 2
+fi
+
+exec "$JAVACMD" -classpath "$JAR" -Dorg.gradle.appname=gradlew \
+  org.gradle.wrapper.GradleWrapperMain "$@"

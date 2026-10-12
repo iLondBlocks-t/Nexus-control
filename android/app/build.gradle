@@ -1,0 +1,69 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.nexus.phoneagent'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.nexus.phoneagent"
+        minSdk 23
+        // Targets the newest behaviour NEXUS has been reviewed against while
+        // still running on Android 9 (API 28).
+        targetSdk 34
+        versionCode 1
+        versionName "0.1.0"
+
+        // No native libraries are bundled, so the APK runs on 32-bit ARM,
+        // 64-bit ARM and x86 emulators without extra configuration.
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
+        release {
+            // No obfuscation: this is an owner-operated app and readable stack
+            // traces are more valuable than shrinking a ~1 MB APK.
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // Keep the APK small and the dependency set at zero runtime dependencies.
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/*']
+        }
+    }
+
+    lint {
+        abortOnError true
+        checkReleaseBuilds false
+        // The accessibility service is the documented purpose of the app.
+        disable 'AccessibilityService'
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = false
+            returnDefaultValues = true
+        }
+    }
+}
+
+dependencies {
+    // No runtime dependencies: Android framework APIs only.
+    testImplementation 'junit:junit:4.13.2'
+    // The unit tests run against a mockable android.jar whose org.json methods
+    // are stubbed out, so a real org.json is needed for them to behave.
+    testImplementation 'org.json:json:20231013'
+}

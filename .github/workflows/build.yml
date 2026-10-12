@@ -1,0 +1,144 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  server:
+    name: Server tests and static checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: No committed credentials
+        run: npm run check:secrets
+
+      - name: Lint the server and the scripts
+        run: npm run lint
+
+      - name: Check the Android client sources
+        run: npm run android:check
+
+      - name: Validate the example configuration
+        run: npm run check:config
+
+      - name: Run the test suite
+        run: npm test
+        env:
+          NODE_ENV: test
+          STORAGE_DRIVER: memory
+          AI_PROVIDER: mock
+          OWNER_API_TOKENS: ci-owner-token
+
+  android:
+    name: Android debug APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # The runner image may or may not ship the Android SDK, so install the
+      # official command line tools when sdkmanager is not already available
+      # (both URLs below are Google's own, long lived "_latest" archives).
+      - name: Install the Android SDK command line tools
+        run: |
+          set -euo pipefail
+          if command -v sdkmanager > /dev/null 2>&1; then
+            echo "sdkmanager is already available at $(command -v sdkmanager)"
+            exit 0
+          fi
+          SDK="$HOME/android-sdk"
+          mkdir -p "$SDK/cmdline-tools"
+          for version in 11076708 13114758; do
+            url="https://dl.google.com/android/repository/commandlinetools-linux-${version}_latest.zip"
+            echo "trying ${url}"
+            if curl -fsSL -o /tmp/cmdline-tools.zip "$url"; then
+              echo "downloaded ${url}"
+              break
+            fi
+          done
+          test -s /tmp/cmdline-tools.zip
+          unzip -q -o /tmp/cmdline-tools.zip -d "$SDK/cmdline-tools"
+          mv "$SDK/cmdline-tools/cmdline-tools" "$SDK/cmdline-tools/latest"
+          echo "ANDROID_HOME=$SDK" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK" >> "$GITHUB_ENV"
+          echo "$SDK/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+
+      - name: Android SDK packages
+        run: |
+          set -euo pipefail
+          echo "ANDROID_HOME=${ANDROID_HOME:-not-set}"
+          sdkmanager --version
+          # "yes | sdkmanager" is avoided on purpose: yes dies of SIGPIPE and
+          # pipefail would then fail the whole step.
+          printf 'y\ny\ny\ny\ny\ny\ny\ny\n' | sdkmanager --licenses > /dev/null || true
+          sdkmanager --install "platforms;android-34" "build-tools;34.0.0"
+          sdkmanager --list_installed > sdk-packages.txt || true
+          head -40 sdk-packages.txt || true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # The wrapper JAR is committed, as it is in most Android projects. Its
+      # digest is printed so anyone can compare it with the copy inside the
+      # official Gradle 8.9 distribution.
+      - name: Gradle wrapper
+        run: |
+          set -euo pipefail
+          cd android
+          sha256sum gradle/wrapper/gradle-wrapper.jar
+          chmod +x gradlew
+          ./gradlew --version
+
+      - name: Check the Android client sources
+        run: npm run android:check
+
+      # The output is kept and re-published as job annotations below, so a
+      # failure can be read from the Checks API without downloading raw logs.
+      - name: Run the client unit tests
+        id: client-tests
+        continue-on-error: true
+        run: |
+          cd android
+          set -o pipefail
+          ./gradlew --no-daemon :app:testDebugUnitTest 2>&1 | tee "$RUNNER_TEMP/client-tests.log"
+          exit "${PIPESTATUS[0]}"
+
+      - name: Report the client test result
+        run: node scripts/report-android-tests.js "$RUNNER_TEMP/client-tests.log"
+
+      - name: Build the debug APK
+        run: cd android && ./gradlew --no-daemon :app:assembleDebug
+
+      - name: Upload the APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14

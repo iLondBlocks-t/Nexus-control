@@ -1,0 +1,10 @@
+.git
+.github
+node_modules
+data
+android
+docs
+*.md
+.env
+.env.*
+!.env.example

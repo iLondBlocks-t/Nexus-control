@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  NEXUS accessibility service configuration.
+
+  The service is only ever started by the owner from Android Settings.
+  It reads the visible UI to find elements the owner asked it to interact with
+  and performs taps, scrolls and text entry through the official accessibility
+  action APIs. It never records keystrokes, never takes screenshots and never
+  reads content from secure windows.
+-->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/accessibility_service_description"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged|typeViewClicked|typeViewScrolled"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:canRetrieveWindowContent="true"
+    android:canPerformGestures="true"
+    android:canRequestFilterKeyEvents="false"
+    android:canRequestTouchExplorationMode="false"
+    android:notificationTimeout="100"
+    android:settingsActivity="com.nexus.phoneagent.ui.SettingsActivity"
+    android:summary="@string/accessibility_service_summary" />

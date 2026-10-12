@@ -207,6 +207,22 @@ and cannot reach the data without the token. It is a thin client over
 the approval gate all live on the server. `curl` does the same thing if you
 prefer a terminal.
 
+## 4c. Hosting on a server
+
+A ready-made kit lives in `deploy/`: `Dockerfile`, `docker-compose.yml`, a
+systemd unit and an nginx reverse proxy, with the full walkthrough in
+[deploy/README.md](../deploy/README.md). The short version:
+
+```bash
+cp .env.example .env && $EDITOR .env     # keys go here, never in git
+docker compose up -d
+curl https://nexus.example.com/healthz
+```
+
+Every setting comes from the environment. Nothing is baked into the image, and
+`npm run check:secrets` scans the `Dockerfile` and the compose file too, so a
+key pasted into either fails CI instead of reaching a registry.
+
 ## 5. Telegram bot
 
 1. Create a bot with @BotFather and copy the token.

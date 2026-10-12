@@ -24,6 +24,9 @@ const PATTERNS = [
 
 const ALLOWED_FILES = new Set(['.env.example', 'docs/TROUBLESHOOTING.md', 'SECURITY.md']);
 const SCANNED_EXTENSIONS = new Set(['.js', '.json', '.md', '.yml', '.yaml', '.xml', '.java', '.gradle', '.properties', '.env', '.txt']);
+// Container and process manifests have no extension but are plain text, and a
+// key copied into one of them is exactly the mistake this script exists for.
+const SCANNED_NAMES = new Set(['dockerfile', 'procfile', 'makefile']);
 
 async function trackedFiles() {
   try {
@@ -50,7 +53,8 @@ const findings = [];
 
 for (const relative of files) {
   if (ALLOWED_FILES.has(relative)) continue;
-  if (!SCANNED_EXTENSIONS.has(path.extname(relative))) continue;
+  const extension = path.extname(relative);
+  if (!SCANNED_EXTENSIONS.has(extension) && !SCANNED_NAMES.has(path.basename(relative).toLowerCase())) continue;
   if (relative.startsWith('android/gradle/wrapper/')) continue;
   const absolute = path.join(ROOT, relative);
   if (!fs.existsSync(absolute)) continue;

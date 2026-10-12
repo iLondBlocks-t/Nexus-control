@@ -1,0 +1,40 @@
+# systemd unit for a plain VPS (no Docker).
+#
+#   sudo useradd -r -m -d /opt/nexus nexus
+#   sudo cp -r . /opt/nexus/app && sudo chown -R nexus:nexus /opt/nexus
+#   sudo cp deploy/nexus.service /etc/systemd/system/
+#   sudo -u nexus nano /opt/nexus/app/.env      # your keys live here, not in git
+#   sudo systemctl daemon-reload && sudo systemctl enable --now nexus
+#   sudo journalctl -u nexus -f
+
+[Unit]
+Description=NEXUS phone agent control server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=nexus
+Group=nexus
+WorkingDirectory=/opt/nexus/app
+EnvironmentFile=/opt/nexus/app/.env
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=PORT=3000
+ExecStart=/usr/bin/node server/src/index.js
+Restart=on-failure
+RestartSec=5
+
+# Hardening: the process owns one directory and gains little else.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/nexus/app/data
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target
